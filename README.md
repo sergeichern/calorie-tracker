@@ -37,3 +37,32 @@ cd backend
 npm install
 # .env → USDA_API_KEY=your-usda-key
 npm start
+```
+
+---
+
+### Frontend 
+```cd frontend
+npm install
+# .env → REACT_APP_API_URL=https://your-backend-url
+npm start
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Category  | Technology                         |
+|-----------|-------------------------------------|
+| Frontend  | React, Axios, Vercel                |
+| Backend   | Node.js, Express, SQLite, Render    |
+| API       | USDA FoodData Central               |
+
+---
+
+## 📚 License
+
+MIT. Feel free to contribute.
+
+
+
