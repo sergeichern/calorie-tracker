@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 
-const FoodLog = ({ entries, onDelete }) => {
+const FoodLog = ({ entries, onDelete, apiUrl }) => {
   if (entries.length === 0) {
     return <p style={{ marginTop: '2rem' }}>No food logged today yet 🕒</p>;
   }
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/food/${id}`);
+      await axios.delete(`${apiUrl}/api/food/${id}`);
       onDelete(); // Refresh the log after deletion
     } catch (err) {
       console.error('Error deleting item:', err);
@@ -22,7 +22,9 @@ const FoodLog = ({ entries, onDelete }) => {
         {[...entries]
           .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
           .map((item) => {
-            const localTime = new Date(new Date(item.timestamp).getTime() - 4 * 60 * 60 * 1000);
+            const localTime = new Date(
+              new Date(item.timestamp).getTime() - 4 * 60 * 60 * 1000
+            );
             const formattedTime = localTime.toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit',

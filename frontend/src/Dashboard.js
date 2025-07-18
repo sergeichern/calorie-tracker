@@ -3,22 +3,30 @@ import axios from 'axios';
 import LogForm from './LogForm';
 import FoodLog from './FoodLog';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Dashboard = () => {
   const [stats, setStats] = useState({ total: 0, target: 2000, percent: 0 });
   const [entries, setEntries] = useState([]);
 
   // Fetch stats
-  const fetchStats = () => {
-    axios.get('http://localhost:5000/api/todayStats')
-      .then(res => setStats(res.data))
-      .catch(err => console.error('Error fetching stats:', err));
+  const fetchStats = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/todayStats`);
+      setStats(res.data);
+    } catch (err) {
+      console.error('Error fetching stats:', err);
+    }
   };
 
   // Fetch food log
-  const fetchLog = () => {
-    axios.get('http://localhost:5000/api/today')
-      .then(res => setEntries(res.data))
-      .catch(err => console.error('Error fetching log:', err));
+  const fetchLog = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/today`);
+      setEntries(res.data);
+    } catch (err) {
+      console.error('Error fetching log:', err);
+    }
   };
 
   // Initial load
@@ -38,7 +46,7 @@ const Dashboard = () => {
       <h2>Daily Calorie Tracker</h2>
 
       {/* Food logging form */}
-      <LogForm onLog={refreshAll} />
+      <LogForm onLog={refreshAll} apiUrl={API_URL} />
 
       {/* Stats display */}
       <p><strong>Goal:</strong> {stats.target} kcal</p>
@@ -63,7 +71,7 @@ const Dashboard = () => {
       </div>
 
       {/* Live food log viewer */}
-      <FoodLog entries={entries} onDelete={refreshAll} />
+      <FoodLog entries={entries} onDelete={refreshAll} apiUrl={API_URL} />
     </div>
   );
 };

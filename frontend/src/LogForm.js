@@ -1,38 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
-const LogForm = ({ onLog }) => {
+const LogForm = ({ onLog, apiUrl }) => {
   const [food, setFood] = useState('');
   const [calories, setCalories] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-  const delayDebounce = setTimeout(() => {
-    if (food.length > 2) {
-      setLoading(true);
-      axios.post('http://localhost:5000/api/usdaSearch', { query: food })
-        .then(res => {
-          setSuggestions(res.data); // already formatted by backend
-        })
-        .catch(err => console.error('Proxy error:', err))
-        .finally(() => setLoading(false));
-    } else {
-      setSuggestions([]);
-    }
-  }, 500);
+    const delayDebounce = setTimeout(() => {
+      if (food.length > 2) {
+        setLoading(true);
+        axios
+          .post(`${apiUrl}/api/usdaSearch`, { query: food })
+          .then(res => setSuggestions(res.data))
+          .catch(err => console.error('Proxy error:', err))
+          .finally(() => setLoading(false));
+      } else {
+        setSuggestions([]);
+      }
+    }, 500);
 
-  return () => clearTimeout(delayDebounce);
-}, [food]);
-
+    return () => clearTimeout(delayDebounce);
+  }, [food, apiUrl]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!food || !calories) return;
 
     try {
-      await axios.post('http://localhost:5000/api/logFood', {
+      await axios.post(`${apiUrl}/api/logFood`, {
         food,
         calories: parseInt(calories)
       });
